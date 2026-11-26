@@ -98,7 +98,7 @@ ol, ul { list-style: none; }
   transition: transform 0.6s var(--ease);
 }
 .brand:hover .brand__mono { transform: rotate(-12deg); }
-.brand__name { font: 800 17px/0.86 var(--f-display); text-transform: uppercase; letter-spacing: 0.04em; }
+.brand__name { font: 800 17px/1.02 var(--f-display); text-transform: uppercase; letter-spacing: 0.04em; }
 .site-nav { display: flex; gap: 22px; }
 .site-nav a, .btn-plan {
   font: 500 11.5px/1 var(--f-mono); letter-spacing: 0.12em; text-transform: uppercase;
