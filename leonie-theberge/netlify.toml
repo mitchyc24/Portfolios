@@ -1,0 +1,5 @@
+# Le site est pré-généré dans public/ (npm run images && npm run build) :
+# Netlify n'a qu'à le publier tel quel.
+[build]
+  publish = "public"
+  command = "echo 'Site pré-généré : rien à construire'"

@@ -3,7 +3,7 @@
 
 export const site = {
   name: 'Léonie Théberge',
-  url: '', // domaine final, p. ex. 'https://leonietheberge.com' (sert aux balises canonical / Open Graph)
+  url: 'https://leonie-theberge.netlify.app', // à changer si un domaine personnalisé est ajouté (balises canonical / Open Graph)
   lang: 'fr-CA',
   description:
     "Léonie Théberge — designer d'expositions, scénographe, designer de produits et artiste basée au Québec. Muséographie, scénographie et design de produits.",

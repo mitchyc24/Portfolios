@@ -164,7 +164,8 @@ const navItems = [
 function layout({ title, description = site.description, base, body, page = 'page', here = '', image, pathName = '' }) {
   const fullTitle = title ? `${title} — ${site.name}` : `${site.name} — ${site.roles.join(', ')}`;
   const canonical = site.url ? `${site.url.replace(/\/$/, '')}/${pathName}` : '';
-  const ogImage = image && site.url ? `${site.url.replace(/\/$/, '')}/${imgMeta(image).files[1440]}` : '';
+  // Aperçu de partage : la couverture du projet, sinon une vue de la maquette (src/img/og.jpg).
+  const ogImage = site.url ? `${site.url.replace(/\/$/, '')}/${image ? imgMeta(image).files[1440] : 'img/og.jpg'}` : '';
   const nav = navItems.map(([id, label]) => {
     const href = id === 'art' ? `${base}art/` : `${base}#${id}`;
     return `<a href="${href}" ${here === id ? 'aria-current="page"' : ''}>${label}</a>`;
@@ -185,7 +186,7 @@ ${canonical ? `<link rel="canonical" href="${canonical}">` : ''}
 <meta property="og:type" content="website">
 <meta property="og:title" content="${t(fullTitle)}">
 <meta property="og:description" content="${t(description)}">
-${ogImage ? `<meta property="og:image" content="${ogImage}">` : ''}
+${ogImage ? `<meta property="og:image" content="${ogImage}">\n<meta name="twitter:card" content="summary_large_image">` : ''}
 <link rel="icon" href="${base}img/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="${base}fonts/big-shoulders-display.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="${base}fonts/dm-mono-400.woff2" as="font" type="font/woff2" crossorigin>
