@@ -20,6 +20,7 @@ function initMuseum(m) {
   const resetBtn = $('[data-reset]', m);
   const viewBtns = $$('[data-view-btn]', m);
   const cartels = $$('[data-cartel]', m);
+  const statusLines = $$('[data-status-for]', m);
   const isHero = m.classList.contains('museum--hero');
   const sway = $('.museum__sway', m);
   // Éléments qui lisent --spin / --tilt : on ne modifie qu'eux pendant un glisser
@@ -43,7 +44,9 @@ function initMuseum(m) {
     active = id;
     $$('.is-active', m).forEach((el) => el.classList.remove('is-active'));
     if (id) $$(`[data-room="${id}"], [data-room-link="${id}"]`, m).forEach((el) => el.classList.add('is-active'));
-    showCartel(focused || id);
+    // Le survol ne fait que surligner : le cartel ne change qu'au clic (focusRoom),
+    // sinon il disparaît sous le curseur pendant qu'on se dirige vers lui.
+    statusLines.forEach((s) => (s.hidden = s.dataset.statusFor !== (id || 'none')));
   }
 
   function roomCenter(id) {
@@ -82,7 +85,7 @@ function initMuseum(m) {
 
   viewBtns.forEach((b) => b.addEventListener('click', () => setView(b.dataset.viewBtn)));
   resetBtn.addEventListener('click', unfocus);
-  m.addEventListener('keydown', (e) => { if (e.key === 'Escape' && focused) { e.stopPropagation(); unfocus(); } });
+  (isHero ? document : m).addEventListener('keydown', (e) => { if (e.key === 'Escape' && focused) { e.stopPropagation(); unfocus(); } });
 
   // Survol / focus clavier
   stage.addEventListener('pointerover', (e) => {

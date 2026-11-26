@@ -31,13 +31,17 @@ export const rooms = [
     blurb: "Scénographe au Musée canadien de l'histoire et au Musée canadien de la guerre. Formée en design de produits et en arts visuels.",
   },
   {
-    id: 'contact', n: '05', name: 'Accueil', title: 'Contact',
+    // L'accueil n'est pas une salle numérotée : signalé par le pictogramme « i » (information).
+    id: 'contact', n: 'i', name: 'Accueil', title: 'Contact',
     rect: [31, 31, 56, 48], node: [74.5, 69.5], door: null,
     blurb: 'Une exposition, un objet, une collaboration ? Écrivez-moi.',
   },
 ];
 
 const HUB = [50, 52];
+
+/** « Salle 01 » … ou « Accueil » pour le hall. */
+export const roomLabel = (r) => (r.id === 'contact' ? 'Accueil' : `Salle ${r.n}`);
 
 /* ------------------------------------------------------------------ */
 /* Primitives                                                          */
@@ -190,7 +194,7 @@ export function renderMuseum(ctx) {
   const floorRooms = rooms.map((r) => {
     const [x, y, l, d] = r.rect;
     const href = ctx.roomHref(r);
-    return `<a class="m-room" href="${href}" data-room="${r.id}" style="--x:${x};--y:${y};--l:${l};--d:${d}" aria-label="Salle ${r.n} — ${r.name} : ${r.title}"><span class="m-room__label"><b>${r.n}</b>${r.name}</span></a>`;
+    return `<a class="m-room" href="${href}" data-room="${r.id}" style="--x:${x};--y:${y};--l:${l};--d:${d}" aria-label="${r.id === 'contact' ? 'Accueil — Contact' : `${roomLabel(r)} — ${r.name} : ${r.title}`}"><span class="m-room__label"><b>${r.n}</b>${r.name}</span></a>`;
   }).join('');
 
   // Diagramme de circulation : du hall vers chaque salle (passe par la porte).

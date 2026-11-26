@@ -36,6 +36,21 @@ function collectSources() {
   return [...set];
 }
 
+// Couvertures : on ajoute un aperçu de partage JPEG 1200×630 (Open Graph ; WebP n'est pas lu partout).
+const OG = new Set([...exhibitions, ...products].map((p) => p.images[0].src).concat(series.at(-1).works[0].src));
+
+async function ensureOg(src, id) {
+  const file = `img/og-${id}.jpg`;
+  if (FORCE || !(await exists(path.join(ROOT, 'public', file)))) {
+    await sharp(await sourceFile(src), { failOn: 'none' }).rotate()
+      .resize(1200, 630, { fit: 'cover', position: sharp.strategy.attention })
+      .flatten({ background: '#ffffff' })
+      .jpeg({ quality: 78, mozjpeg: true })
+      .toFile(path.join(ROOT, 'public', file));
+  }
+  return file;
+}
+
 function idFor(src) {
   if (src.startsWith('wix:')) return src.slice(4).split('~')[0].replace(/^27ae81_/, '').slice(0, 12);
   const base = path.basename(src).replace(/\.[^.]+$/, '').toLowerCase().replace(/[^a-z0-9]+/g, '-');
@@ -64,7 +79,8 @@ async function processOne(src, previous) {
   const files = Object.fromEntries(WIDTHS.map((w) => [w, `img/${id}-${w}.webp`]));
   // Déjà traitée ? (relancer avec --force après avoir remplacé un fichier local)
   if (!FORCE && prev && (await Promise.all(Object.values(prev.files).map((f) => exists(path.join(ROOT, 'public', f))))).every(Boolean)) {
-    return [src, prev];
+    const { og, ...rest } = prev;
+    return [src, OG.has(src) ? { ...rest, og: await ensureOg(src, id) } : rest];
   }
   const img = sharp(input, { failOn: 'none' }).rotate();
   const meta = await img.metadata();
@@ -83,7 +99,9 @@ async function processOne(src, previous) {
       .toFile(path.join(ROOT, 'public', files[w]));
     out[w] = files[w];
   }
-  return [src, { w: w0, h: h0, color, files: out }];
+  const entry = { w: w0, h: h0, color, files: out };
+  if (OG.has(src)) entry.og = await ensureOg(src, id);
+  return [src, entry];
 }
 
 async function main() {

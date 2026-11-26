@@ -8,7 +8,7 @@ import { fileURLToPath } from 'node:url';
 import { exhibitions, products } from '../content/projects.mjs';
 import { series } from '../content/art.mjs';
 import { site, manifesto, bio, cv, artStatement, artQuote, hekoManifesto } from '../content/site.mjs';
-import { renderMuseum, rooms } from './museum.mjs';
+import { renderMuseum, rooms, roomLabel } from './museum.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const OUT = path.join(ROOT, 'public');
@@ -109,21 +109,23 @@ function cartels(base) {
   };
   const count = roomCounts;
   return rooms.map((r) => `<section class="cartel" data-cartel="${r.id}" hidden>
-      <p class="cartel__n"><span>Salle ${r.n}</span><span>${count[r.id]}</span></p>
+      <p class="cartel__n"><span>${roomLabel(r)}</span><span>${count[r.id]}</span></p>
       <p class="cartel__title">${t(r.name)}</p>
       <p class="cartel__sub">${t(r.title)}</p>
       <p class="cartel__blurb">${t(r.blurb)}</p>
-      <p class="cartel__more">Cliquer la salle pour la visiter</p>
       ${body[r.id]}
-      <a class="cartel__go" href="${r.id === 'art' ? `${base}art/` : `${base}#${r.id}`}">Entrer dans la salle <span aria-hidden="true">→</span></a>
+      <a class="cartel__go" href="${base}#${r.id}">${r.id === 'contact' ? 'Aller au contact' : 'Entrer dans la salle'} <span aria-hidden="true">→</span></a>
     </section>`).join('');
 }
 
 function museum({ base, here, mode }) {
   const welcome = `<section class="cartel cartel--welcome" data-cartel="welcome">
-      <p class="cartel__n"><span>Plan du musée</span><span>${rooms.length} espaces</span></p>
-      <ol class="cartel__rooms">${rooms.map((r) => `<li><a href="${r.id === 'art' ? `${base}art/` : `${base}#${r.id}`}" data-room-link="${r.id}"><b>${r.n}</b><span>${t(r.name)}</span><small>${t(roomCounts[r.id])}</small></a></li>`).join('')}</ol>
-      <p class="cartel__hint"><span class="hint-fine">Glisser pour tourner la maquette — cliquer une salle pour s’y rendre.</span><span class="hint-touch">Toucher une salle pour la visiter — glisser pour tourner.</span></p>
+      <p class="cartel__n"><span>Plan du musée</span><span>${rooms.length - 1} salles + accueil</span></p>
+      <ol class="cartel__rooms">${rooms.map((r) => `<li><a href="${base}#${r.id}" data-room-link="${r.id}"><b>${r.n}</b><span>${t(r.name)}</span><small>${t(roomCounts[r.id])}</small></a></li>`).join('')}</ol>
+      <p class="cartel__status">
+        <span data-status-for="none"><span class="hint-fine">Cliquer une salle pour s’en approcher — glisser pour tourner.</span><span class="hint-touch">Toucher une salle pour s’en approcher — glisser pour tourner la maquette.</span></span>
+        ${rooms.map((r) => `<span data-status-for="${r.id}" hidden><b>${r.n} ${t(r.name)}</b> — ${t(r.title)}. <span class="hint-fine">Cliquer pour s’approcher.</span></span>`).join('')}
+      </p>
     </section>`;
   return `<div class="museum museum--${mode}" data-museum data-view="axo" ${here ? `data-here="${here}"` : ''}>
     <div class="museum__stage" data-stage role="group" aria-label="Maquette interactive du musée : chaque salle mène à une section du portfolio">
@@ -165,7 +167,7 @@ function layout({ title, description = site.description, base, body, page = 'pag
   const fullTitle = title ? `${title} — ${site.name}` : `${site.name} — ${site.roles.join(', ')}`;
   const canonical = site.url ? `${site.url.replace(/\/$/, '')}/${pathName}` : '';
   // Aperçu de partage : la couverture du projet, sinon une vue de la maquette (src/img/og.jpg).
-  const ogImage = site.url ? `${site.url.replace(/\/$/, '')}/${image ? imgMeta(image).files[1440] : 'img/og.jpg'}` : '';
+  const ogImage = site.url ? `${site.url.replace(/\/$/, '')}/${(image && imgMeta(image).og) || 'img/og.jpg'}` : '';
   const nav = navItems.map(([id, label]) => {
     const href = id === 'art' ? `${base}art/` : `${base}#${id}`;
     return `<a href="${href}" ${here === id ? 'aria-current="page"' : ''}>${label}</a>`;
@@ -230,7 +232,7 @@ function footer(base) {
     <div class="site-footer__brand"><span class="brand__mono brand__mono--xl" aria-hidden="true"></span><p>${t(site.roles.join(' · '))}</p></div>
     <nav aria-label="Pied de page">
       <p class="label">Salles</p>
-      ${navItems.map(([id, label], i) => `<a href="${id === 'art' ? `${base}art/` : `${base}#${id}`}"><span>${pad(i + 1)}</span>${label}</a>`).join('')}
+      ${navItems.map(([id, label], i) => `<a href="${id === 'art' ? `${base}art/` : `${base}#${id}`}"><span>${id === 'contact' ? 'i' : pad(i + 1)}</span>${label}</a>`).join('')}
     </nav>
     <div>
       <p class="label">Liens</p>
@@ -255,9 +257,9 @@ function footer(base) {
 /* Pages                                                               */
 /* ------------------------------------------------------------------ */
 
-function sectionHead({ n, id, title, sub, count }) {
+function sectionHead({ n, id, title, sub, count, label = 'Salle' }) {
   return `<header class="room-head" data-reveal>
-    <p class="room-head__n"><span>Salle</span><b>${n}</b></p>
+    <p class="room-head__n${n === 'i' ? ' room-head__n--info' : ''}"><span>${label}</span><b${n === 'i' ? ' aria-label="information"' : ''}>${n}</b></p>
     <div class="room-head__text">
       <h2 class="room-head__title" id="${id}-titre">${t(title)}</h2>
       ${sub ? `<p class="room-head__sub">${t(sub)}</p>` : ''}
@@ -362,7 +364,7 @@ function homePage() {
   </section>`;
 
   const contact = `<section class="room room--contact" id="contact" aria-labelledby="contact-titre">
-    ${sectionHead({ n: '05', id: 'contact', title: 'Accueil — Contact', sub: 'Une exposition, un objet, une collaboration ?' })}
+    ${sectionHead({ n: 'i', label: 'Accueil', id: 'contact', title: 'Contact', sub: 'Une exposition, un objet, une collaboration ?' })}
     <div class="contact" data-reveal>
       <a class="contact__mail" href="mailto:${site.email}">${site.email.replace('@', '<wbr>@')}</a>
       <div class="contact__actions">

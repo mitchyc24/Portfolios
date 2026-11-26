@@ -52,7 +52,8 @@
    "400": "img/03d142db7c55-400.webp",
    "800": "img/03d142db7c55-800.webp",
    "1440": "img/03d142db7c55-1440.webp"
-  }
+  },
+  "og": "img/og-03d142db7c55.jpg"
  },
  "wix:27ae81_0454ff0aeb6347f682c394be4441ac38~mv2.png": {
   "w": 790,
@@ -272,7 +273,8 @@
    "400": "img/16c3776537ef-400.webp",
    "800": "img/16c3776537ef-800.webp",
    "1440": "img/16c3776537ef-1440.webp"
-  }
+  },
+  "og": "img/og-16c3776537ef.jpg"
  },
  "wix:27ae81_1846e3d1eb1340ba985331c75010f23b~mv2.png": {
   "w": 1024,
@@ -338,7 +340,8 @@
    "400": "img/2240ef8ba18f-400.webp",
    "800": "img/2240ef8ba18f-800.webp",
    "1440": "img/2240ef8ba18f-1440.webp"
-  }
+  },
+  "og": "img/og-2240ef8ba18f.jpg"
  },
  "wix:27ae81_25a1f32a774a4d0ead9e08db918af7e0~mv2.jpg": {
   "w": 960,
@@ -349,7 +352,8 @@
    "400": "img/25a1f32a774a-400.webp",
    "800": "img/25a1f32a774a-800.webp",
    "1440": "img/25a1f32a774a-1440.webp"
-  }
+  },
+  "og": "img/og-25a1f32a774a.jpg"
  },
  "wix:27ae81_28b8410b5dbd44249abedb430c538e23~mv2.jpg": {
   "w": 488,
@@ -360,7 +364,8 @@
    "400": "img/28b8410b5dbd-400.webp",
    "800": "img/28b8410b5dbd-800.webp",
    "1440": "img/28b8410b5dbd-1440.webp"
-  }
+  },
+  "og": "img/og-28b8410b5dbd.jpg"
  },
  "wix:27ae81_2a209e1d02b2400fbd09b01ee930f2c8~mv2_d_1855_1200_s_2.jpg": {
   "w": 1855,
@@ -371,7 +376,8 @@
    "400": "img/2a209e1d02b2-400.webp",
    "800": "img/2a209e1d02b2-800.webp",
    "1440": "img/2a209e1d02b2-1440.webp"
-  }
+  },
+  "og": "img/og-2a209e1d02b2.jpg"
  },
  "wix:27ae81_2a65dc5003e9472dbd23d2711926be6f~mv2_d_5184_3456_s_4_2.jpg": {
   "w": 2200,
@@ -393,7 +399,8 @@
    "400": "img/2a6a2091d843-400.webp",
    "800": "img/2a6a2091d843-800.webp",
    "1440": "img/2a6a2091d843-1440.webp"
-  }
+  },
+  "og": "img/og-2a6a2091d843.jpg"
  },
  "wix:27ae81_2ac11aee53d842b6b6e755a26383fa34~mv2.png": {
   "w": 2200,
@@ -404,7 +411,8 @@
    "400": "img/2ac11aee53d8-400.webp",
    "800": "img/2ac11aee53d8-800.webp",
    "1440": "img/2ac11aee53d8-1440.webp"
-  }
+  },
+  "og": "img/og-2ac11aee53d8.jpg"
  },
  "wix:27ae81_2c09041873524537ac3e527da5cdf97f~mv2.jpg": {
   "w": 605,
@@ -514,7 +522,8 @@
    "400": "img/3f6bb39c710f-400.webp",
    "800": "img/3f6bb39c710f-800.webp",
    "1440": "img/3f6bb39c710f-1440.webp"
-  }
+  },
+  "og": "img/og-3f6bb39c710f.jpg"
  },
  "wix:27ae81_3fdcfc4d1a4048afa6f9a09c7e6f6f8d~mv2.jpg": {
   "w": 1280,
@@ -580,7 +589,8 @@
    "400": "img/4911a6e58e0f-400.webp",
    "800": "img/4911a6e58e0f-800.webp",
    "1440": "img/4911a6e58e0f-1440.webp"
-  }
+  },
+  "og": "img/og-4911a6e58e0f.jpg"
  },
  "wix:27ae81_4acf2a840d314d11b1f5116f8a998bb3~mv2.png": {
   "w": 1904,
@@ -866,7 +876,8 @@
    "400": "img/67e2469dc4e3-400.webp",
    "800": "img/67e2469dc4e3-800.webp",
    "1440": "img/67e2469dc4e3-1440.webp"
-  }
+  },
+  "og": "img/og-67e2469dc4e3.jpg"
  },
  "wix:27ae81_688cea67c5364878bc33f0911b9aed75~mv2.jpg": {
   "w": 2200,
@@ -976,7 +987,8 @@
    "400": "img/76928f1ae5c4-400.webp",
    "800": "img/76928f1ae5c4-800.webp",
    "1440": "img/76928f1ae5c4-1440.webp"
-  }
+  },
+  "og": "img/og-76928f1ae5c4.jpg"
  },
  "wix:27ae81_77cf7682418344b78bd571faffcaba61~mv2_d_8044_12067_s_5_3_2.png": {
   "w": 1466,
@@ -987,7 +999,8 @@
    "400": "img/77cf76824183-400.webp",
    "800": "img/77cf76824183-800.webp",
    "1440": "img/77cf76824183-1440.webp"
-  }
+  },
+  "og": "img/og-77cf76824183.jpg"
  },
  "wix:27ae81_7938fdedd17c489585cdaa7a5ed0d137~mv2.jpg": {
   "w": 2048,
@@ -998,7 +1011,8 @@
    "400": "img/7938fdedd17c-400.webp",
    "800": "img/7938fdedd17c-800.webp",
    "1440": "img/7938fdedd17c-1440.webp"
-  }
+  },
+  "og": "img/og-7938fdedd17c.jpg"
  },
  "wix:27ae81_7b543694fb3749828af41de2d2a890d8~mv2_d_4000_6016_s_4_2.jpg": {
   "w": 1462,
@@ -1196,7 +1210,8 @@
    "400": "img/9d8d9378cdce-400.webp",
    "800": "img/9d8d9378cdce-800.webp",
    "1440": "img/9d8d9378cdce-1440.webp"
-  }
+  },
+  "og": "img/og-9d8d9378cdce.jpg"
  },
  "wix:27ae81_a15f2ec0db3e483196b3d3ce7d91b41f~mv2_d_1945_1317_s_2.jpg": {
   "w": 1945,
@@ -1460,7 +1475,8 @@
    "400": "img/c74bf3597320-400.webp",
    "800": "img/c74bf3597320-800.webp",
    "1440": "img/c74bf3597320-1440.webp"
-  }
+  },
+  "og": "img/og-c74bf3597320.jpg"
  },
  "wix:27ae81_c75bfb98047f46a0adbb7a741ee4855c~mv2_d_4096_2712_s_4_2.jpg": {
   "w": 2200,
@@ -1504,7 +1520,8 @@
    "400": "img/ca574215984f-400.webp",
    "800": "img/ca574215984f-800.webp",
    "1440": "img/ca574215984f-1440.webp"
-  }
+  },
+  "og": "img/og-ca574215984f.jpg"
  },
  "wix:27ae81_ca69bf28be034b34bf82361c5446a30a~mv2_d_5184_3888_s_4_2.jpg": {
   "w": 2200,
@@ -1570,7 +1587,8 @@
    "400": "img/cf5308e75a66-400.webp",
    "800": "img/cf5308e75a66-800.webp",
    "1440": "img/cf5308e75a66-1440.webp"
-  }
+  },
+  "og": "img/og-cf5308e75a66.jpg"
  },
  "wix:27ae81_cfb531894c714b128a31eb4d6dd1f27a~mv2.png": {
   "w": 1920,
@@ -1680,7 +1698,8 @@
    "400": "img/ddef90f20eb9-400.webp",
    "800": "img/ddef90f20eb9-800.webp",
    "1440": "img/ddef90f20eb9-1440.webp"
-  }
+  },
+  "og": "img/og-ddef90f20eb9.jpg"
  },
  "wix:27ae81_e70583c0451d464c91e6e8240afc853b~mv2.jpg": {
   "w": 692,
@@ -1691,7 +1710,8 @@
    "400": "img/e70583c0451d-400.webp",
    "800": "img/e70583c0451d-800.webp",
    "1440": "img/e70583c0451d-1440.webp"
-  }
+  },
+  "og": "img/og-e70583c0451d.jpg"
  },
  "wix:27ae81_e7aabb156d0d485a97ba0a094b4f873e~mv2_d_5184_3456_s_4_2.jpg": {
   "w": 2200,
@@ -1713,7 +1733,8 @@
    "400": "img/e8d2f3453ff0-400.webp",
    "800": "img/e8d2f3453ff0-800.webp",
    "1440": "img/e8d2f3453ff0-1440.webp"
-  }
+  },
+  "og": "img/og-e8d2f3453ff0.jpg"
  },
  "wix:27ae81_e96ac7dd7a5a4f47bc130be84bbc6cac~mv2_d_4096_2712_s_4_2.jpg": {
   "w": 2200,
@@ -1834,7 +1855,8 @@
    "400": "img/f3b405ea72bb-400.webp",
    "800": "img/f3b405ea72bb-800.webp",
    "1440": "img/f3b405ea72bb-1440.webp"
-  }
+  },
+  "og": "img/og-f3b405ea72bb.jpg"
  },
  "wix:27ae81_f4556e642bd648ff8c6ed9eb4bc9215b~mv2.jpg": {
   "w": 2200,
@@ -1845,7 +1867,8 @@
    "400": "img/f4556e642bd6-400.webp",
    "800": "img/f4556e642bd6-800.webp",
    "1440": "img/f4556e642bd6-1440.webp"
-  }
+  },
+  "og": "img/og-f4556e642bd6.jpg"
  },
  "wix:27ae81_f526618badf8434d8b271163fa30568c~mv2.png": {
   "w": 1110,
@@ -1878,7 +1901,8 @@
    "400": "img/f891e136868e-400.webp",
    "800": "img/f891e136868e-800.webp",
    "1440": "img/f891e136868e-1440.webp"
-  }
+  },
+  "og": "img/og-f891e136868e.jpg"
  },
  "wix:27ae81_fa3f618785b84bfc99f8084274fa801e~mv2.jpg": {
   "w": 1024,
@@ -1900,7 +1924,8 @@
    "400": "img/fcec1620ffe1-400.webp",
    "800": "img/fcec1620ffe1-800.webp",
    "1440": "img/fcec1620ffe1-1440.webp"
-  }
+  },
+  "og": "img/og-fcec1620ffe1.jpg"
  },
  "wix:27ae81_fd500ead4a0e4c1d9b9b35dd9ed740ec~mv2_d_3072_4608_s_4_2.jpg": {
   "w": 1466,
@@ -1922,7 +1947,8 @@
    "400": "img/fdd23850c401-400.webp",
    "800": "img/fdd23850c401-800.webp",
    "1440": "img/fdd23850c401-1440.webp"
-  }
+  },
+  "og": "img/og-fdd23850c401.jpg"
  },
  "wix:27ae81_fde807eada794175a7d855af11bdd30d~mv2_d_3294_3284_s_4_2.jpg": {
   "w": 2200,

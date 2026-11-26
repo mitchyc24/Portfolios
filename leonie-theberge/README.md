@@ -6,7 +6,7 @@ designer de produits et artiste. Il réunit ses deux anciens sites Wix
 
 **Concept — le musée.** La navigation principale est une maquette CSS 3D d'un petit
 musée : chaque salle correspond à une section du portfolio (01 Expositions,
-02 Objets, 03 Art, 04 À propos, 05 Accueil/contact). On peut passer de la vue
+02 Objets, 03 Art, 04 À propos) autour du hall d’accueil (pictogramme « i », contact). On peut passer de la vue
 **Plan** à l'**Axonométrie** puis à la **Perspective** (les trois dessins du
 scénographe), tourner la maquette au glisser et cliquer une salle pour s'en
 approcher. Au premier chargement, un court « montage de l'exposition » élève les
