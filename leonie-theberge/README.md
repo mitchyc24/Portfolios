@@ -65,6 +65,17 @@ voir `scripts/museum.mjs` (`northArt`, `westArt`, `plinths`…).
 
 ## Déploiement
 
+En ligne : **https://leonie-theberge.netlify.app** (projet Netlify `leonie-theberge`).
+`netlify.toml` publie `public/` tel quel, sans étape de build. Le projet n'est pas relié
+à Git : après un `npm run build`, redéployer avec la CLI Netlify depuis ce dossier.
+
+```bash
+npx netlify-cli deploy --prod --dir=public --site=leonie-theberge
+```
+
+Pour des déploiements automatiques à chaque push, relier le dépôt dans Netlify
+(répertoire de base : `leonie-theberge`).
+
 `public/` est un site statique autonome : Netlify, Cloudflare Pages, GitHub Pages,
 ou n'importe quel hébergement. Les liens internes sont relatifs (le site fonctionne
 aussi dans un sous-dossier), sauf la page `404.html` qui suppose un déploiement à la
