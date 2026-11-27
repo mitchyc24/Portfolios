@@ -280,15 +280,15 @@ if (lb) {
   const show = (i) => {
     idx = (i + items.length) % items.length;
     const img = $('img', items[idx]);
-    const largest = img.srcset.split(',').pop().trim().split(' ')[0];
-    lbImg.src = largest;
+    const full = (im) => im.dataset.full || im.srcset.split(',').pop().trim().split(' ')[0];
+    lbImg.src = full(img);
     lbImg.alt = img.alt;
     const cap = items[idx].closest('figure')?.querySelector('figcaption');
     lbCap.textContent = cap ? cap.textContent.replace(/\s+/g, ' ').trim() : img.alt;
     lbCount.textContent = `${String(idx + 1).padStart(2, '0')} / ${String(items.length).padStart(2, '0')}`;
     // précharge la suivante
     const next = $('img', items[(idx + 1) % items.length]);
-    if (next) new Image().src = next.srcset.split(',').pop().trim().split(' ')[0];
+    if (next) new Image().src = full(next);
   };
   items.forEach((b, i) => b.addEventListener('click', () => { show(i); lb.showModal(); }));
   $('[data-lb-prev]', lb).addEventListener('click', () => show(idx - 1));
@@ -314,7 +314,7 @@ $$('[data-copy]').forEach((b) =>
     const label = $('[data-copy-label]', b);
     try {
       await navigator.clipboard.writeText(b.dataset.copy);
-      label.textContent = 'Adresse copiée ✓';
+      label.textContent = 'Adresse copiée';
     } catch {
       location.href = `mailto:${b.dataset.copy}`;
     }

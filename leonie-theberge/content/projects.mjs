@@ -211,7 +211,7 @@ export const products = [
     "context": "Projet de fin d'études",
     "collaborators": "Raphael Pellerin et Chantal Gagnon",
     "award": "Mention d'excellence — Faculté d'aménagement, d'architecture, d'art et de design",
-    "summary": "Conception d'un outil non-pharmacologique de relaxation destiné à la femme pendant son accouchement, afin de créer une atmosphère d'intimité pour l'aider à mieux gérer les douleurs reliées à l'accouchement.",
+    "summary": "Conception d'un outil non pharmacologique de relaxation destiné à la femme pendant son accouchement, afin de créer une atmosphère d'intimité pour l'aider à mieux gérer les douleurs reliées à l'accouchement.",
     "objectives": "Faire la conception d'une gamme de produits et service. Développer une entreprise avec son modèle d'affaires et son identité visuelle. Développer et justifier le développement technique d'un produit tant au niveau de ses composantes, ses assemblages, mais aussi des matériaux et procédés choisis. Comprendre la séquence de fabrication complète de l'idée à la mise en marché d'un produit fabriqué industriellement.",
     "images": [
       { "src": "wix:27ae81_c74bf35973204005b51739a3e1aa10b2~mv2.jpg", "caption": "Interface" },
@@ -226,7 +226,7 @@ export const products = [
       { "src": "wix:27ae81_5a7b0cdc89ea4181b219ca0f0d0ffe06~mv2.jpg", "caption": "Contexte" },
       { "src": "wix:27ae81_c3ec308b22a449f395f4f65ffbfad97e~mv2.jpg", "caption": "Contexte" },
       { "src": "wix:27ae81_3529f8b5f2d74f4c8ea808dfbe627880~mv2.jpg", "caption": "Contexte" },
-      { "src": "wix:27ae81_1ff37577857440f2b16ced5e657ce43a~mv2.png", "caption": "Texture de la base siliconnée" },
+      { "src": "wix:27ae81_1ff37577857440f2b16ced5e657ce43a~mv2.png", "caption": "Texture de la base siliconée" },
       { "src": "wix:27ae81_0c50be57b4c640b2820deb122bd3000c~mv2.png", "caption": "Modèle méditation grand public" }
     ],
     "mandate": ""
@@ -244,7 +244,7 @@ export const products = [
       { "src": "wix:27ae81_25a1f32a774a4d0ead9e08db918af7e0~mv2.jpg", "caption": "Brume" },
       { "src": "wix:27ae81_9aa4873d98a04b7d81a41621fba68fbd~mv2.jpg", "caption": "Brume avec bâtonnet d'évaporation" },
       { "src": "wix:27ae81_a6f22b47a4374a238401432c5a63e5e6~mv2.jpg", "caption": "Texture" },
-      { "src": "wix:27ae81_c5232e30d036497385427effa4893efd~mv2.jpg", "caption": "Page web Simons (Version Mobile)" }
+      { "src": "wix:27ae81_c5232e30d036497385427effa4893efd~mv2.jpg", "caption": "Page web Simons (version mobile)" }
     ],
     "mandate": "",
     "award": ""
@@ -257,7 +257,7 @@ export const products = [
     "context": "Projet en équipe",
     "collaborators": "Chantal Gagnon, Kelly Desabrais, Jean-François Trudel et Camille Grenier-Naud",
     "summary": "Conception d'un mobilier urbain adapté à une place publique, comportant un luminaire et des bancs avec une disposition adaptable.",
-    "objectives": "Réaliser un système de mobilier extérieur, dédié aux espaces publics, qui favorise à la fois la mobilité, la sécurité et le vivre ensemble. Identifier des critères de design (fonctionnels, techniques et économiques) pertinents. Développer une solution flexible.",
+    "objectives": "Réaliser un système de mobilier extérieur, dédié aux espaces publics, qui favorise à la fois la mobilité, la sécurité et le vivre-ensemble. Identifier des critères de design (fonctionnels, techniques et économiques) pertinents. Développer une solution flexible.",
     "images": [
       { "src": "wix:27ae81_67e2469dc4e3431cbd05a4c2c59db244~mv2.jpg", "caption": "CHARLIE" },
       { "src": "wix:27ae81_8a04df1c9dbd4ec1b2be74817b3753b5~mv2_d_3840_2880_s_4_2.png", "caption": "Banc_no1" },

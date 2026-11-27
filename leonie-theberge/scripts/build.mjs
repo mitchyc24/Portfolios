@@ -21,18 +21,55 @@ const VERSION = Date.now().toString(36);
 /* ------------------------------------------------------------------ */
 
 const esc = (s = '') => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-// Typographie française : apostrophes courbes, espaces insécables avant : ; ! ?
+// Typographie française (usage québécois). fr() produit du texte brut :
+//   apostrophes courbes ; espace insécable avant « : », dans les guillemets et avant un tiret ;
+//   espace fine insécable avant ; ! ? — remplacée par une marge CSS dans le HTML (voir rich()),
+//   car aucune des polices du site ne contient ce caractère (U+202F).
+const NBSP = ' ';
+const FINE = ' ';
 const fr = (s = '') =>
   String(s)
     .replace(/'/g, '’')
-    .replace(/ :/g, ' :')
-    .replace(/ ([;!?])/g, ' $1')
-    .replace(/« /g, '« ')
-    .replace(/ »/g, ' »')
-    .replace(/(\d) (\d{3})/g, '$1 $2');
-const t = (s) => esc(fr(s));
-const years = (y = '') => y.replace(/(\d{4})-(\d{4})/, '$1 — $2');
+    .replace(/[  ]:(?=\s|$)/g, `${NBSP}:`)
+    .replace(/[   ]([;!?])/g, `${FINE}$1`)
+    .replace(/«[  ]?/g, `«${NBSP}`)
+    .replace(/[  ]?»/g, `${NBSP}»`)
+    .replace(/ — /g, `${NBSP}— `)
+    .replace(/\b([Nn])o ?(?=\d)/g, `$1o${NBSP}`)
+    .replace(/(\d) (\d{3})(?!\d)/g, `$1${NBSP}$2`);
+// Enrichissement réservé aux nœuds de texte : ordinaux et « no » en exposant (ils restent en
+// minuscule dans les titres en capitales), espace fine dessinée par CSS.
+const rich = (html) =>
+  html
+    .replace(/ ([;!?])/g, '<span class="fine">$1</span>')
+    .replace(/\b(\d+)(ers?|res?|es?)\b/g, '$1<sup class="ord">$2</sup>')
+    .replace(/\b([Nn])o (?=\d)/g, '$1<sup class="ord">o</sup> ');
+/** Texte pour un nœud HTML. */
+const t = (s) => rich(esc(fr(s)));
+/** Texte pour un attribut (alt, aria-label, content) ou <title> : aucun balisage. */
+const a = (s) => esc(fr(s));
+// Dimensions d'une œuvre : « 1.5x2pi » → « 1,5 × 2 pi » (virgule décimale, signe ×, espaces insécables).
+const dims = (s = '') =>
+  String(s)
+    .replace(/(\d)\.(\d)/g, '$1,$2')
+    .replace(/(\d)\s*x\s*(?=\d)/g, `$1${NBSP}×${NBSP}`)
+    .replace(/(\d)\s*(pi|po|cm|m|pix)\b/g, (_, d, u) => `${d}${NBSP}${u === 'pix' ? 'px' : u}`);
+const workAlt = (w) => `${w.title}${w.details ? ` — ${dims(w.details)}` : ''}`;
+// Intervalle d'années : tiret demi-cadratin sans espaces (« 2021–2022 »), pour ne pas le
+// confondre avec le tiret cadratin qui sépare les éléments d'une légende.
+const years = (y = '') => y.replace(/(\d{4})-(\d{4})/, '$1–$2');
 const pad = (i) => String(i).padStart(2, '0');
+
+// Pictogrammes en SVG : les polices du site n'ont ni flèches ni croix, et le repli sur une
+// police système varie d'un appareil à l'autre (« ↗ » devient même un émoji sur iOS).
+const ICONS = {
+  right: 'M2 8h12M9 3l5 5-5 5',
+  left: 'M14 8H2M7 3L2 8l5 5',
+  up: 'M8 14V2M3 7l5-5 5 5',
+  out: 'M4 12l8-8M5.5 4H12v6.5',
+  close: 'M3 3l10 10M13 3L3 13',
+};
+const icon = (name) => `<svg class="ico" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="${ICONS[name]}"/></svg>`;
 
 function imgMeta(src) {
   const m = images[src];
@@ -41,12 +78,12 @@ function imgMeta(src) {
 }
 
 /** <img> responsive. sizes : attribut sizes ; base : préfixe relatif. */
-function img(src, { base, alt = '', sizes = '100vw', cls = '', eager = false, max = 1440, min = 240, attrs = '' }) {
+function img(src, { base, alt = '', sizes = '100vw', cls = '', eager = false, max = 1440, min = 240, attrs = '', zoom = false }) {
   const m = imgMeta(src);
   const entries = Object.entries(m.files).filter(([w]) => +w <= max && +w >= min);
   const srcset = entries.map(([w, f]) => `${base}${f} ${Math.min(+w, m.w)}w`).join(', ');
   const fallback = entries[Math.min(1, entries.length - 1)][1];
-  return `<img class="${cls}" src="${base}${fallback}" srcset="${srcset}" sizes="${sizes}" width="${m.w}" height="${m.h}" alt="${t(alt)}" ${eager ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async" style="--ph:${m.color}" ${attrs}>`;
+  return `<img class="${cls}" src="${base}${fallback}" srcset="${srcset}" sizes="${sizes}" width="${m.w}" height="${m.h}" alt="${a(alt)}" ${eager ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async" style="--ph:${m.color}"${zoom ? ` data-full="${base}${m.files[1440]}"` : ''}${attrs ? ` ${attrs}` : ''}>`;
 }
 
 const allProjects = [
@@ -79,6 +116,7 @@ function museumWorld({ base, here }) {
     here,
     monogram: `${base}img/monogram.svg`,
     roomHref,
+    a,
     href(ref) {
       if (ref.project) return base + projectPath(projectBySlug[ref.project]);
       if (ref.work) return `${base}art/#${ref.work[0]}`;
@@ -114,7 +152,7 @@ function cartels(base) {
       <p class="cartel__sub">${t(r.title)}</p>
       <p class="cartel__blurb">${t(r.blurb)}</p>
       ${body[r.id]}
-      <a class="cartel__go" href="${base}#${r.id}">${r.id === 'contact' ? 'Aller au contact' : 'Entrer dans la salle'} <span aria-hidden="true">→</span></a>
+      <a class="cartel__go" href="${base}#${r.id}">${r.id === 'contact' ? 'Aller au contact' : 'Entrer dans la salle'} ${icon('right')}</a>
     </section>`).join('');
 }
 
@@ -128,7 +166,7 @@ function museum({ base, here, mode }) {
       </p>
     </section>`;
   return `<div class="museum museum--${mode}" data-museum data-view="axo" ${here ? `data-here="${here}"` : ''}>
-    <div class="museum__stage" data-stage role="group" aria-label="Maquette interactive du musée : chaque salle mène à une section du portfolio">
+    <div class="museum__stage" data-stage role="group" aria-label="${a('Maquette interactive du musée : chaque salle mène à une section du portfolio')}">
       <div class="museum__sway"><div class="museum__cam">${museumWorld({ base, here })}</div></div>
     </div>
     <div class="museum__ui">
@@ -163,9 +201,9 @@ const navItems = [
   ['contact', 'Contact'],
 ];
 
-function layout({ title, description = site.description, base, body, page = 'page', here = '', image, pathName = '' }) {
+function layout({ title, description = site.description, base, body, page = 'page', here = '', image, pathName = '', noindex = false }) {
   const fullTitle = title ? `${title} — ${site.name}` : `${site.name} — ${site.roles.join(', ')}`;
-  const canonical = site.url ? `${site.url.replace(/\/$/, '')}/${pathName}` : '';
+  const canonical = site.url && !noindex ? `${site.url.replace(/\/$/, '')}/${pathName}` : '';
   // Aperçu de partage : la couverture du projet, sinon une vue de la maquette (src/img/og.jpg).
   const ogImage = site.url ? `${site.url.replace(/\/$/, '')}/${(image && imgMeta(image).og) || 'img/og.jpg'}` : '';
   const nav = navItems.map(([id, label]) => {
@@ -173,7 +211,7 @@ function layout({ title, description = site.description, base, body, page = 'pag
     return `<a href="${href}" ${here === id ? 'aria-current="page"' : ''}>${label}</a>`;
   }).join('');
   const overlay = page === 'home' ? '' : `<dialog class="museum-dialog" data-museum-dialog aria-label="Plan du musée">
-      <div class="museum-dialog__bar"><p><b>Plan du musée</b> <span>— choisissez une salle</span></p><button type="button" class="btn-close" data-close-dialog>Fermer <span aria-hidden="true">✕</span></button></div>
+      <div class="museum-dialog__bar"><p><b>Plan du musée</b> <span>— choisissez une salle</span></p><button type="button" class="btn-close" data-close-dialog>Fermer ${icon('close')}</button></div>
       ${museum({ base, here, mode: 'overlay' })}
     </dialog>`;
   return `<!doctype html>
@@ -181,13 +219,16 @@ function layout({ title, description = site.description, base, body, page = 'pag
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>${t(fullTitle)}</title>
-<meta name="description" content="${t(description)}">
+<title>${a(fullTitle)}</title>
+<meta name="description" content="${a(description)}">
 <meta name="theme-color" content="#e4e5e0">
-${canonical ? `<link rel="canonical" href="${canonical}">` : ''}
+${noindex ? '<meta name="robots" content="noindex">' : ''}
+${canonical ? `<link rel="canonical" href="${canonical}">\n<meta property="og:url" content="${canonical}">` : ''}
 <meta property="og:type" content="website">
-<meta property="og:title" content="${t(fullTitle)}">
-<meta property="og:description" content="${t(description)}">
+<meta property="og:site_name" content="${a(site.name)}">
+<meta property="og:locale" content="${site.lang.replace('-', '_')}">
+<meta property="og:title" content="${a(fullTitle)}">
+<meta property="og:description" content="${a(description)}">
 ${ogImage ? `<meta property="og:image" content="${ogImage}">\n<meta name="twitter:card" content="summary_large_image">` : ''}
 <link rel="icon" href="${base}img/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="${base}fonts/big-shoulders-display.woff2" as="font" type="font/woff2" crossorigin>
@@ -237,7 +278,7 @@ function footer(base) {
     <div>
       <p class="label">Liens</p>
       <a href="mailto:${site.email}">${site.email}</a>
-      ${site.links.map((l) => `<a href="${l.href}" rel="noopener" target="_blank">${l.label} ↗</a>`).join('')}
+      ${site.links.map((l) => `<a href="${l.href}" rel="noopener" target="_blank">${l.label} ${icon('out')}</a>`).join('')}
     </div>
     <div class="site-footer__clock">
       <p class="label">Atelier</p>
@@ -248,7 +289,7 @@ function footer(base) {
   <div class="site-footer__base">
     <p>© ${YEAR} ${site.name}</p>
     <div class="scalebar" aria-hidden="true"><span>0</span><i></i><span>1</span><i></i><span>5 m</span></div>
-    <a href="#contenu" class="to-top">Retour en haut ↑</a>
+    <a href="#contenu" class="to-top">Retour en haut ${icon('up')}</a>
   </div>
 </footer>`;
 }
@@ -259,7 +300,7 @@ function footer(base) {
 
 function sectionHead({ n, id, title, sub, count, label = 'Salle' }) {
   return `<header class="room-head" data-reveal>
-    <p class="room-head__n${n === 'i' ? ' room-head__n--info' : ''}"><span>${label}</span><b${n === 'i' ? ' aria-label="information"' : ''}>${n}</b></p>
+    <p class="room-head__n${n === 'i' ? ' room-head__n--info' : ''}"><span>${label}</span><b${n === 'i' ? ' role="img" aria-label="information"' : ''}>${n}</b></p>
     <div class="room-head__text">
       <h2 class="room-head__title" id="${id}-titre">${t(title)}</h2>
       ${sub ? `<p class="room-head__sub">${t(sub)}</p>` : ''}
@@ -299,7 +340,7 @@ function homePage() {
         <span class="exlist__title">${t(p.title)}</span>
         <span class="exlist__client">${t(p.client || '—')}</span>
         <span class="exlist__year">${years(p.year) || '—'}</span>
-        <span class="exlist__arrow" aria-hidden="true">→</span>
+        <span class="exlist__arrow" aria-hidden="true">${icon('right')}</span>
         ${img(p.images[0].src, { base, alt: '', sizes: '(hover: hover) 360px, 96px', cls: 'exlist__img', max: 800 })}
       </a></li>`).join('')}
     </ol>
@@ -330,10 +371,10 @@ function homePage() {
       <div class="art-intro__text" data-reveal>
         <blockquote class="art-quote"><p>${t(artQuote)}</p></blockquote>
         <p>${t(artStatement[3])}</p>
-        <a class="btn" href="art/">Visiter la salle d’art <span aria-hidden="true">→</span></a>
+        <a class="btn" href="art/">Visiter la salle d’art ${icon('right')}</a>
       </div>
       <div class="salon" data-reveal>
-        ${hang.map(({ s, w }, i) => `<a class="salon__item salon__item--${i + 1}" href="art/#${s}">${img(w.src, { base, alt: `${w.title}${w.details ? ` — ${w.details}` : ''}`, sizes: '(min-width: 900px) 22vw, 45vw', max: 800 })}<span class="salon__cartel">${t(w.title)}</span></a>`).join('')}
+        ${hang.map(({ s, w }, i) => `<a class="salon__item salon__item--${i + 1}" href="art/#${s}">${img(w.src, { base, alt: workAlt(w), sizes: '(min-width: 900px) 22vw, 45vw', max: 800 })}<span class="salon__cartel">${t(w.title)}</span></a>`).join('')}
       </div>
     </div>
     <ol class="series-index">
@@ -341,7 +382,7 @@ function homePage() {
     </ol>
   </section>`;
 
-  const cvRows = (rows) => rows.map((r) => `<li data-reveal><span class="cv__years">${t(r.years || '')}</span><span class="cv__what"><b>${t(r.title)}</b>${r.org ? `<span>${t(r.org)}</span>` : ''}${r.note ? `<small>${t(r.note)}</small>` : ''}</span>${r.href ? `<a class="cv__link" href="${r.href}" ${r.href.startsWith('http') ? 'target="_blank" rel="noopener"' : ''} aria-label="Voir : ${t(r.title)}">↗</a>` : ''}</li>`).join('');
+  const cvRows = (rows) => rows.map((r) => `<li data-reveal><span class="cv__years">${t(r.years || '')}</span><span class="cv__what"><b>${t(r.title)}</b>${r.org ? `<span>${t(r.org)}</span>` : ''}${r.note ? `<small>${t(r.note)}</small>` : ''}</span>${r.href ? `<a class="cv__link" href="${r.href}" ${r.href.startsWith('http') ? 'target="_blank" rel="noopener"' : ''} aria-label="${a(`Voir : ${r.title}`)}">${icon('out')}</a>` : ''}</li>`).join('');
   const about = `<section class="room room--about" id="a-propos" aria-labelledby="a-propos-titre">
     ${sectionHead({ n: '04', id: 'a-propos', title: 'À propos', sub: 'Parcours, formation et distinctions.' })}
     <div class="about">
@@ -352,7 +393,7 @@ function homePage() {
       <div class="about__bio" data-reveal>
         <p class="about__lead">Scénographe au Musée canadien de l’histoire et au Musée canadien de la guerre — designer d’expositions, designer de produits et artiste.</p>
         ${bio.map((p) => `<p>${t(p)}</p>`).join('')}
-        <p class="about__links"><a class="btn" href="${site.cvPdf}" target="_blank" rel="noopener">CV complet (PDF) <span aria-hidden="true">↗</span></a> <a class="btn btn--ghost" href="${site.links[0].href}" target="_blank" rel="noopener">LinkedIn <span aria-hidden="true">↗</span></a></p>
+        <p class="about__links"><a class="btn" href="${site.cvPdf}" target="_blank" rel="noopener">CV complet (PDF) ${icon('out')}</a> <a class="btn btn--ghost" href="${site.links[0].href}" target="_blank" rel="noopener">LinkedIn ${icon('out')}</a></p>
       </div>
     </div>
     <div class="cv">
@@ -369,7 +410,7 @@ function homePage() {
       <a class="contact__mail" href="mailto:${site.email}">${site.email.replace('@', '<wbr>@')}</a>
       <div class="contact__actions">
         <button type="button" class="btn" data-copy="${site.email}"><span data-copy-label>Copier l’adresse</span></button>
-        ${site.links.map((l) => `<a class="btn btn--ghost" href="${l.href}" target="_blank" rel="noopener">${l.label} <span aria-hidden="true">↗</span></a>`).join('')}
+        ${site.links.map((l) => `<a class="btn btn--ghost" href="${l.href}" target="_blank" rel="noopener">${l.label} ${icon('out')}</a>`).join('')}
       </div>
     </div>
   </section>`;
@@ -400,7 +441,7 @@ function projectPage(p, list, roomId) {
       ${p.client ? `<p class="project__client">${t(p.client)}</p>` : ''}
     </header>
     <figure class="project__cover" data-lightbox-group>
-      <button type="button" class="zoomable" data-lightbox="0" aria-label="Agrandir l’image">${img(cover.src, { base, alt: altFor(p, cover, 0), sizes: '100vw', eager: true })}</button>
+      <button type="button" class="zoomable" data-lightbox="0" aria-label="Agrandir l’image">${img(cover.src, { base, alt: altFor(p, cover, 0), sizes: '100vw', eager: true, zoom: true })}</button>
       ${cover.caption ? `<figcaption>${t(cover.caption)}</figcaption>` : ''}
     </figure>
     <div class="project__body">
@@ -415,13 +456,13 @@ function projectPage(p, list, roomId) {
       ${gallery.map((g, k) => {
         const m = imgMeta(g.src);
         const shape = m.w / m.h > 1.25 ? 'wide' : m.w / m.h < 0.85 ? 'tall' : 'square';
-        return `<figure class="gallery__item gallery__item--${shape}" data-reveal><button type="button" class="zoomable" data-lightbox="${k + 1}" aria-label="Agrandir l’image">${img(g.src, { base, alt: altFor(p, g, k + 1), sizes: shape === 'wide' ? '(min-width: 900px) 66vw, 100vw' : '(min-width: 900px) 33vw, 100vw' })}</button>${g.caption ? `<figcaption>${t(g.caption)}</figcaption>` : ''}</figure>`;
+        return `<figure class="gallery__item gallery__item--${shape}" data-reveal><button type="button" class="zoomable" data-lightbox="${k + 1}" aria-label="Agrandir l’image">${img(g.src, { base, alt: altFor(p, g, k + 1), sizes: shape === 'wide' ? '(min-width: 900px) 66vw, 100vw' : '(min-width: 900px) 33vw, 100vw', zoom: true })}</button>${g.caption ? `<figcaption>${t(g.caption)}</figcaption>` : ''}</figure>`;
       }).join('')}
     </section>` : ''}
     <nav class="pager" aria-label="Projets voisins">
-      <a class="pager__link pager__link--prev" href="${base}${projectPath({ ...prev, room: roomId })}"><span class="label">← Précédent</span><b>${t(prev.title)}</b></a>
+      <a class="pager__link pager__link--prev" href="${base}${projectPath({ ...prev, room: roomId })}"><span class="label">${icon('left')} Précédent</span><b>${t(prev.title)}</b></a>
       <a class="pager__room" href="${base}#${roomId}"><span class="label">Salle ${room.n}</span><b>${room.name}</b></a>
-      <a class="pager__link pager__link--next" href="${base}${projectPath({ ...next, room: roomId })}"><span class="label">Suivant →</span><b>${t(next.title)}</b>${img(next.images[0].src, { base, alt: '', sizes: '240px', max: 400 })}</a>
+      <a class="pager__link pager__link--next" href="${base}${projectPath({ ...next, room: roomId })}"><span class="label">Suivant ${icon('right')}</span><b>${t(next.title)}</b>${img(next.images[0].src, { base, alt: '', sizes: '240px', max: 400 })}</a>
     </nav>
   </article>
   ${lightbox()}`;
@@ -450,8 +491,8 @@ function artPage() {
       return series.map((s) => `<section class="series" id="${s.slug}" aria-labelledby="${s.slug}-t">
         <header class="series__head" data-reveal><h2 id="${s.slug}-t">${t(s.title)}</h2><p class="room-head__dim"><i></i><span>${s.works.length} œuvre${s.works.length > 1 ? 's' : ''}</span><i></i></p></header>
         <div class="series__grid">
-          ${s.works.map((w, wi) => `<figure class="work" id="${s.slug}-${workSlug(w.title)}${s.works.findIndex((x) => x.title === w.title) === wi ? '' : `-${wi + 1}`}" data-reveal><button type="button" class="zoomable" data-lightbox="${k++}" aria-label="Agrandir : ${t(w.title)}">${img(w.src, { base, alt: `${w.title}${w.details ? ` — ${w.details}` : ''}`, sizes: '(min-width: 1100px) 30vw, (min-width: 700px) 45vw, 92vw', max: 800 })}</button>
-            <figcaption class="work__cartel"><b>${t(w.title)}</b>${w.details ? `<span>${t(w.details)}</span>` : ''}</figcaption></figure>`).join('')}
+          ${s.works.map((w, wi) => `<figure class="work" id="${s.slug}-${workSlug(w.title)}${s.works.findIndex((x) => x.title === w.title) === wi ? '' : `-${wi + 1}`}" data-reveal><button type="button" class="zoomable" data-lightbox="${k++}" aria-label="${a(`Agrandir : ${w.title}`)}">${img(w.src, { base, alt: workAlt(w), sizes: '(min-width: 1100px) 30vw, (min-width: 700px) 45vw, 92vw', max: 800, zoom: true })}</button>
+            <figcaption class="work__cartel"><b>${t(w.title)}</b>${w.details ? `<span>${t(dims(w.details))}</span>` : ''}</figcaption></figure>`).join('')}
         </div>
       </section>`).join('');
     })()}
@@ -463,9 +504,9 @@ function artPage() {
       </details>
     </section>
     <nav class="pager" aria-label="Autres salles">
-      <a class="pager__link pager__link--prev" href="${base}#objets"><span class="label">← Salle 02</span><b>Objets</b></a>
+      <a class="pager__link pager__link--prev" href="${base}#objets"><span class="label">${icon('left')} Salle 02</span><b>Objets</b></a>
       <a class="pager__room" href="${base}"><span class="label">Plan</span><b>Musée</b></a>
-      <a class="pager__link pager__link--next" href="${base}#a-propos"><span class="label">Salle 04 →</span><b>À propos</b></a>
+      <a class="pager__link pager__link--next" href="${base}#a-propos"><span class="label">Salle 04 ${icon('right')}</span><b>À propos</b></a>
     </nav>
   </article>
   ${lightbox()}`;
@@ -475,9 +516,9 @@ function artPage() {
 function lightbox() {
   return `<dialog class="lightbox" data-lightbox-dialog aria-label="Visionneuse">
     <figure class="lightbox__figure"><img alt="" data-lb-img><figcaption data-lb-cap></figcaption></figure>
-    <button type="button" class="lightbox__btn lightbox__btn--prev" data-lb-prev aria-label="Image précédente">←</button>
-    <button type="button" class="lightbox__btn lightbox__btn--next" data-lb-next aria-label="Image suivante">→</button>
-    <button type="button" class="btn-close lightbox__close" data-close-dialog>Fermer <span aria-hidden="true">✕</span></button>
+    <button type="button" class="lightbox__btn lightbox__btn--prev" data-lb-prev aria-label="Image précédente">${icon('left')}</button>
+    <button type="button" class="lightbox__btn lightbox__btn--next" data-lb-next aria-label="Image suivante">${icon('right')}</button>
+    <button type="button" class="btn-close lightbox__close" data-close-dialog>Fermer ${icon('close')}</button>
     <p class="lightbox__count" data-lb-count></p>
   </dialog>`;
 }
@@ -489,9 +530,9 @@ function notFound() {
     <p class="label">Erreur 404 — salle introuvable</p>
     <h1 class="project__title">Cette salle est fermée</h1>
     <p>La page demandée n’existe pas ou a été déplacée. Le plan du musée vous ramènera en terrain connu.</p>
-    <p><a class="btn" href="${base}">Retour au plan du musée <span aria-hidden="true">→</span></a></p>
+    <p><a class="btn" href="${base}">Retour au plan du musée ${icon('right')}</a></p>
   </section>`;
-  return layout({ title: 'Page introuvable', base, body, page: 'notfound' });
+  return layout({ title: 'Page introuvable', base, body, page: 'notfound', noindex: true });
 }
 
 /* ------------------------------------------------------------------ */
@@ -522,6 +563,12 @@ async function main() {
   for (const p of exhibitions) await write(`expositions/${p.slug}/index.html`, projectPage(p, exhibitions, 'expositions'));
   for (const p of products) await write(`objets/${p.slug}/index.html`, projectPage(p, products, 'objets'));
   await write('404.html', notFound());
+  if (site.url) {
+    const origin = site.url.replace(/\/$/, '');
+    const paths = ['', 'art/', ...allProjects.map(projectPath)];
+    await write('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${paths.map((u) => `  <url><loc>${origin}/${u}</loc></url>`).join('\n')}\n</urlset>\n`);
+    await writeFile(path.join(OUT, 'robots.txt'), `${(await readFile(path.join(ROOT, 'src', 'robots.txt'), 'utf8')).trim()}\nSitemap: ${origin}/sitemap.xml\n`);
+  }
   const pages = 3 + exhibitions.length + products.length;
   console.log(`✓ ${pages} pages → public/`);
 }

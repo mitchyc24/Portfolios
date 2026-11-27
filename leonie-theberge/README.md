@@ -24,6 +24,23 @@ tiré de ses toiles.
 - Tout est amélioration progressive : sans JS, la maquette et les liens fonctionnent ;
   `prefers-reduced-motion` coupe les animations.
 
+## Typographie
+
+Le build applique la typographie française (usage québécois) aux textes de `content/` :
+apostrophes courbes, espaces insécables (avant « : », dans les guillemets, avant un tiret),
+espace fine avant « ; ! ? », ordinaux et « no » en exposant (`50e` → 50ᵉ, `no1` → nᵒ 1),
+dimensions des œuvres (`1.5x2pi` → 1,5 × 2 pi) et intervalles d'années (2021–2022).
+On écrit donc le contenu simplement, sans caractères spéciaux.
+
+Trois règles à respecter si l'on touche au CSS ou au gabarit :
+
+- **Interlignage des titres en capitales** : au moins 1,06. Dans Big Shoulders Display,
+  l'accent d'une capitale (É, À, Ô) monte à 0,98 em ; en dessous, il touche la ligne du dessus.
+- **Uniquement des caractères présents dans les polices** (sous-ensemble latin). Les flèches et
+  la croix sont des SVG (`icon()` dans `scripts/build.mjs`), pas des caractères Unicode, qui
+  seraient rendus par une police système différente sur chaque appareil.
+- **DM Mono n'existe qu'en 400 et 500**, Instrument Serif qu'en italique : pas de gras au-delà.
+
 ## Structure
 
 ```
@@ -80,7 +97,7 @@ Pour des déploiements automatiques à chaque push, relier le dépôt dans Netli
 ou n'importe quel hébergement. Les liens internes sont relatifs (le site fonctionne
 aussi dans un sous-dossier), sauf la page `404.html` qui suppose un déploiement à la
 racine du domaine. Renseigner `site.url` dans `content/site.mjs` une fois le domaine
-connu (balises canonical et Open Graph).
+connu (balises canonical et Open Graph, `sitemap.xml`, `robots.txt`).
 
 ## À compléter / vérifier avec Léonie
 
@@ -93,7 +110,10 @@ connu (balises canonical et Open Graph).
 - Le lien « CV complet (PDF) » pointe encore vers le fichier hébergé par Wix ;
   le copier dans `src/` si le compte Wix est fermé.
 - Coquilles corrigées au passage : « beaux-arts », « identité », « spatio-temporel »,
-  « Parcs Canada », « Jean-Pierre Raynaud ». L'exposition « Atelier Artkane 21
+  « Parcs Canada », « Jean-Pierre Raynaud », « siliconée », « non pharmacologique »,
+  « vivre-ensemble », « encre de Chine », « (version mobile) ».
+- Légendes à relire : « Banc_no1 » à « Banc_no3 » (Charlie) ressemblent à des noms de fichier ;
+  « Wall Planter » (légende) et « Wallplanter » (titre) ; « Passeport de marche (endo) ». L'exposition « Atelier Artkane 21
   (en préparation) » de 2019 a été retirée du CV faute de confirmation.
 
 ## Crédits

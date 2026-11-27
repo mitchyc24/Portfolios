@@ -74,6 +74,7 @@ function piece({ left, top, w, h, img, href, room, frame = '', label = '' }) {
  *  - roomHref(room) -> url
  *  - here: id de la salle « Vous êtes ici » (facultatif)
  *  - monogram: url du monogramme
+ *  - a(texte) -> texte typographié et échappé pour un attribut
  */
 export function renderMuseum(ctx) {
   const parts = [];
@@ -194,7 +195,7 @@ export function renderMuseum(ctx) {
   const floorRooms = rooms.map((r) => {
     const [x, y, l, d] = r.rect;
     const href = ctx.roomHref(r);
-    return `<a class="m-room" href="${href}" data-room="${r.id}" style="--x:${x};--y:${y};--l:${l};--d:${d}" aria-label="${r.id === 'contact' ? 'Accueil — Contact' : `${roomLabel(r)} — ${r.name} : ${r.title}`}"><span class="m-room__label"><b>${r.n}</b>${r.name}</span></a>`;
+    return `<a class="m-room" href="${href}" data-room="${r.id}" style="--x:${x};--y:${y};--l:${l};--d:${d}" aria-label="${ctx.a(r.id === 'contact' ? 'Accueil — Contact' : `${roomLabel(r)} — ${r.name} : ${r.title}`)}"><span class="m-room__label"><b>${r.n}</b>${r.name}</span></a>`;
   }).join('');
 
   // Diagramme de circulation : du hall vers chaque salle (passe par la porte).

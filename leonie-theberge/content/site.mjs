@@ -49,7 +49,7 @@ export const cv = {
     {
       title: "Mention d'excellence",
       org: "Faculté d'aménagement, d'architecture, d'art et de design",
-      note: "Excellente qualité des composantes de design du projet de fin d'études : Temple — outil non-pharmacologique d'aide à l'accouchement et à la détente.",
+      note: "Excellente qualité des composantes de design du projet de fin d'études : Temple — outil non pharmacologique d'aide à l'accouchement et à la détente.",
       href: 'objets/temple/',
     },
     { title: 'Mention spéciale', org: 'Garneau', note: 'Pratique du vélo comme moyen de se véhiculer (EXA).', href: 'objets/exa/' },
