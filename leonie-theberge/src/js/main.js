@@ -284,7 +284,9 @@ if (lb) {
     lbImg.src = full(img);
     lbImg.alt = img.alt;
     const cap = items[idx].closest('figure')?.querySelector('figcaption');
-    lbCap.textContent = cap ? cap.textContent.replace(/\s+/g, ' ').trim() : img.alt;
+    // Cartel d'une œuvre : titre et détails sont deux éléments, à séparer par un tiret.
+    const parts = cap ? (cap.children.length ? [...cap.children] : [cap]).map((c) => c.textContent.replace(/\s+/g, ' ').trim()) : [img.alt];
+    lbCap.textContent = parts.filter(Boolean).join(' — ');
     lbCount.textContent = `${String(idx + 1).padStart(2, '0')} / ${String(items.length).padStart(2, '0')}`;
     // précharge la suivante
     const next = $('img', items[(idx + 1) % items.length]);
