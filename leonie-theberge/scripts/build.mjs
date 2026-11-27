@@ -393,7 +393,7 @@ function homePage() {
       <div class="about__bio" data-reveal>
         <p class="about__lead">Scénographe au Musée canadien de l’histoire et au Musée canadien de la guerre — designer d’expositions, designer de produits et artiste.</p>
         ${bio.map((p) => `<p>${t(p)}</p>`).join('')}
-        <p class="about__links"><a class="btn" href="${site.cvPdf}" target="_blank" rel="noopener">CV complet (PDF) ${icon('out')}</a> <a class="btn btn--ghost" href="${site.links[0].href}" target="_blank" rel="noopener">LinkedIn ${icon('out')}</a></p>
+        <p class="about__links"><a class="btn" href="${base}${site.cvPdf}" target="_blank" rel="noopener">CV complet (PDF) ${icon('out')}</a> <a class="btn btn--ghost" href="${site.links[0].href}" target="_blank" rel="noopener">LinkedIn ${icon('out')}</a></p>
       </div>
     </div>
     <div class="cv">
@@ -546,7 +546,7 @@ async function write(rel, html) {
 }
 
 async function copyStatic() {
-  for (const dir of ['css', 'js', 'fonts']) {
+  for (const dir of ['css', 'js', 'fonts', 'docs']) {
     await rm(path.join(OUT, dir), { recursive: true, force: true });
     await cp(path.join(ROOT, 'src', dir), path.join(OUT, dir), { recursive: true });
   }

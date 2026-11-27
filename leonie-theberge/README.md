@@ -54,7 +54,7 @@ scripts/
   build.mjs     génère toutes les pages HTML → public/
   museum.mjs    la maquette 3D (murs, salles, socles, accrochage)
   serve.mjs     serveur local de prévisualisation
-src/          CSS, JS, polices, monogramme (copiés dans public/)
+src/          CSS, JS, polices, monogramme, docs/ (CV en PDF) — copiés dans public/
 public/       LE SITE À DÉPLOYER (généré, versionné pour un déploiement sans build)
 ```
 
@@ -107,8 +107,10 @@ connu (balises canonical et Open Graph, `sitemap.xml`, `robots.txt`).
   *Pandémies* n'avaient pas de texte descriptif.
 - La dernière phrase de la biographie (passage vers la muséographie) a été rédigée à
   partir de son CV — à valider.
-- Le lien « CV complet (PDF) » pointe encore vers le fichier hébergé par Wix ;
-  le copier dans `src/` si le compte Wix est fermé.
+- Le « CV complet (PDF) » est maintenant hébergé avec le site (`src/docs/leonie-theberge-cv.pdf`),
+  mais c'est la version de 2023 reprise de Wix : elle ne mentionne pas le poste actuel aux musées
+  nationaux, renvoie à l'ancien site Wix et affiche un numéro de téléphone. À remplacer par une
+  version à jour (même nom de fichier), puis `npm run build`.
 - Coquilles corrigées au passage : « beaux-arts », « identité », « spatio-temporel »,
   « Parcs Canada », « Jean-Pierre Raynaud », « siliconée », « non pharmacologique »,
   « vivre-ensemble », « encre de Chine », « (version mobile) ».

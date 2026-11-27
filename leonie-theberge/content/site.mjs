@@ -14,7 +14,7 @@ export const site = {
     { label: 'LinkedIn', href: 'https://www.linkedin.com/in/l%C3%A9onie-th%C3%A9berge-518a3a155/' },
     { label: 'Facebook (art)', href: 'https://www.facebook.com/thebergeart/' },
   ],
-  cvPdf: 'https://27e91818-34e7-4403-a535-0341ae0e8c45.filesusr.com/ugd/27ae81_75b9d4a4ba004d658974e0b7c4b31583.pdf',
+  cvPdf: 'docs/leonie-theberge-cv.pdf', // fichier dans src/docs/ (pour le mettre à jour : remplacer le PDF, puis « npm run build »)
   portrait: { src: 'wix:27ae81_d99ba63cf944452fa9e74512ca4a1c58~mv2.jpg', alt: 'Portrait de Léonie Théberge' },
 };
 
